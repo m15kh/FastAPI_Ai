@@ -1,26 +1,26 @@
-from typing import Literal
-VoicePresets = Literal["v2/en_speaker_1", "v2/en_speaker_9"]
-# models.py
 import torch
-import numpy as np
-from transformers import AutoProcessor, AutoModel, BarkProcessor, BarkModel
-from schemas import VoicePresets
+from diffusers import DiffusionPipeline, StableDiffusionInpaintPipelineLegacy
+
+from PIL import Image
+
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def load_audio_model() -> tuple[BarkProcessor, BarkModel]:
-    processor = AutoProcessor.from_pretrained("suno/bark-small", device=device)
-    model = AutoModel.from_pretrained("suno/bark-small", device=device)
-    return processor, model
+def load_image_model() -> StableDiffusionInpaintPipelineLegacy:
+    pipe = DiffusionPipeline.from_pretrained(
+    "segmind/tiny-sd", torch_dtype=torch.float32,
+    device=device
+    )
+    return pipe
 
+def generate_image(
+    pipe: StableDiffusionInpaintPipelineLegacy, prompt: str
+    ) -> Image.Image:
+    
+        output = pipe(prompt, num_inference_steps=10).images[0]
+        return output
+    
 
-def generate_audio(
-    processor: BarkProcessor,
-    model: BarkModel,
-    prompt: str,
-    preset: VoicePresets,
-    ) -> tuple[np.array, int]:
-    inputs = processor(text=[prompt], return_tensors="pt",voice_preset=preset)
-    output = model.generate(**inputs, do_sample=True).cpu().numpy().squeeze()
-    sample_rate = model.generation_config.sample_rate
-    return output, sample_rate
+# pipe = load_image_model()
+# x = generate_image(pipe, 'draw a home')
+# x.save('ss.png')
