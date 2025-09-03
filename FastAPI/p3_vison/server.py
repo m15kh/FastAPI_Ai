@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Response, status
-from models import load_image_model, generate_image
+from FastAPI.p4_lifespan.models import load_image_model, generate_image
 from utils import img_to_bytes
 from typing import Literal
 
