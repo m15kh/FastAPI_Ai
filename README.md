@@ -16,6 +16,8 @@ Below is an example of how you can use FastAPI to serve an LLM model:
 The following diagram illustrates the connection between FastAPI and an LLM model:
 
 ![LLM Model with FastAPI Connection](assets/llm.png)
+![vision gemerator  Model with FastAPI Connection](assets/vison.png)
+
 
 This setup allows you to send requests to the FastAPI app, which processes the input and returns the model's response.
 
